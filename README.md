@@ -9,7 +9,7 @@ $Model->items was passed from our controller and contains the response from the 
     
     <?=$Model->items->appends( Input::except('page') )->links();?>
     
-Controller:
+**Controller:**
 
 Here is an example of a controller method
 
@@ -32,7 +32,7 @@ Here is an example of a controller method
         
     }
 
-Model:
+**Model:**
 
 This is the GetWithPagination method we set up in our "yourRepository"
 
