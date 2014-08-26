@@ -3,7 +3,7 @@ PHP_Laravel_Pagination
 
 Include our library using the composer name: oval/laravel-pagination
 
-View:
+**View:**
 
 $Model->items was passed from our controller and contains the response from the database(see model)
     
