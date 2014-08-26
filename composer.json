@@ -1,0 +1,26 @@
+{
+    "name": "oval/laravel-pagination",
+    "type": "library",
+    "description": "Pagination helper library for Laravel",
+    "keywords": ["pagination", "laravel"],
+    "homepage": "https://github.com/jamestrusleroval/PHP_Laravel_Pagination",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Korush Mahdavieh",
+            "homepage": "http://oval.uk.com",
+            "role": "Developer"
+        },
+        {
+            "name": "James Trusler",
+            "homepage": "http://oval.uk.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "classmap": ["Models/"]
+    } 
+}
