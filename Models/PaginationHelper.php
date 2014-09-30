@@ -52,5 +52,62 @@ class PaginationHelper
 
         return $paginationModel->amount;
     }
+    
+    public static function GetNewSortParams($currentSort = "", $type = "")
+    {
+        $paramaterString = $_SERVER['QUERY_STRING'];
+               
+        
+        parse_str($paramaterString, $arr);
+        
+        switch($currentSort)
+        {
+            case "none":
+                $newSort = "asc";
+                break;
+            case "asc":
+                $newSort = "desc";
+                break;
+            case "desc":
+                $newSort = "asc";
+                break;
+            default:
+                $newSort = "asc";
+                break;
+        }
+        
+        foreach($arr as $key => $value)
+        {
+            if($key != $type)
+            {
+                if($value == "asc" || $value == "desc")
+                {
+                    $arr[$key] = "none";
+                }
+            }
+        }
+        
+        
+        $arr[$type] = $newSort;
+        
+        return "?" . http_build_query($arr);
+    }   
+    
+    public static function GetFontAwesomeSortIcon($currentSort)
+    {
+        switch($currentSort)
+        {
+            
+            case "asc":
+                return "fa-sort-asc";
+                break;
+            case "desc":
+                return "fa-sort-desc";
+                break;
+            default:
+                return "fa-sort";
+                break;
+        }
+    }
 }
 ?>
