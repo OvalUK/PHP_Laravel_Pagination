@@ -33,8 +33,11 @@ class PaginationHelper
         foreach( $paginationModel->columns as $column )
         {
             /* @var $column PaginationColumn */
-            $query->where($column->columnName, 'LIKE', "%".$column->searchTerm."%");                 
-            $sortBy[ $column->columnName ] = $column->sort;
+            if( !empty( $column->searchTerm ) )
+            {
+                $query->where($column->columnName, 'LIKE', "%".$column->searchTerm."%");                 
+                $sortBy[ $column->columnName ] = $column->sort;
+            }
         }
 
         foreach( $sortBy as $key => $value )
