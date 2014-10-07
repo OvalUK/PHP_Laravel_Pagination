@@ -1,7 +1,7 @@
 <?php
     class PaginationViewModel
     {
-        public $items;
-        public $paginationModel;
+        public $items = NULL;
+        public $paginationModel = NULL;
     }
 ?>
