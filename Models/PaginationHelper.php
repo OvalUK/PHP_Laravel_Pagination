@@ -21,26 +21,46 @@ class PaginationHelper
 
     /**
      * 
+     * @param $fullSearch
+     * @param $tableName
      * @param Db::table $query
      * @param \Oval\Pagination\PaginationModel $paginationModel
      * @return $paginationModel->amount
      */
-    public static function PrepareForDb( $query, PaginationModel $paginationModel )
+    public static function PrepareForDb( $query, PaginationModel $paginationModel, $tableName = "", $fullSearch = false )
     {
-        $whereClauses = array();
+        if( $fullSearch && empty( $tableName ) )
+        {
+            throw new Exception( "Need to define the table name you want to search... if using full search feature!" );
+        }
+        
         $sortBy = array();
 
-        foreach( $paginationModel->columns as $column )
-        {
-            /* @var $column PaginationColumn */
-            if( !empty( $column->searchTerm ) )
+        if( $fullSearch )
+        {            
+            $query->where( function( $cQuery ) use ( $paginationModel, $tableName, &$sortBy )
             {
-                $query->where($column->columnName, 'LIKE', "%".$column->searchTerm."%");     
-            }            
-            
-            $sortBy[ $column->columnName ] = $column->sort;
+                foreach( $paginationModel->columns as $column )
+                {
+                    $cQuery->orWhere( $tableName.".".$column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
+                    $sortBy[ $column->columnName ] = $column->sort;
+                }
+            } );
         }
+        else
+        {
+            foreach( $paginationModel->columns as $column )
+            {
+                /* @var $column PaginationColumn */
+                if( !empty( $column->searchTerm ) )
+                {
+                    $query->where( $column->columnName, 'LIKE', "%".$column->searchTerm."%");
+                }  
 
+                $sortBy[ $column->columnName ] = $column->sort;
+            }
+        }
+        
         foreach( $sortBy as $key => $value )
         {
             switch( $value )
