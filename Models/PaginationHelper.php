@@ -37,7 +37,7 @@ class PaginationHelper
             {
                 foreach( $paginationModel->columns as $column )
                 {
-                    if( $column->concat )
+                    if( isset( $column->concat ) )
                     {
                         $columnString = implode(",",$column->concat->columns);
                         $concat = "CONCAT_WS( " . $column->concat->seperator . ", " . $columnString .  " )";
