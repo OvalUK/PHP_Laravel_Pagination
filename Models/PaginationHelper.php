@@ -37,8 +37,20 @@ class PaginationHelper
             {
                 foreach( $paginationModel->columns as $column )
                 {
-                    $cQuery->orWhere( $column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
-                    $sortBy[ $column->columnName ] = $column->sort;
+                    if( $column->concat )
+                    {
+                        $columnString = implode(",",$column->concat->columns);
+                        $concat = "CONCAT_WS( " . $column->concat->seperator . ", " . $columnString .  " )";
+                        
+                        //If a column needs to be concatoncated
+                       $cQuery->orWhere( DB::raw($concat), "LIKE", "%$column->searchTerm%");
+                       $sortBy[ $column->columnName ] = $concat;                    
+                    }
+                    else
+                    {
+                        $cQuery->orWhere( $column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
+                        $sortBy[ $column->columnName ] = $column->sort;
+                    }
                 }
             } );
         }
