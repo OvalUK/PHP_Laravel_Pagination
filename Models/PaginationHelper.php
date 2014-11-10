@@ -26,18 +26,23 @@ class PaginationHelper
      * @param Db::table $query
      * @param \Oval\Pagination\PaginationModel $paginationModel
      * @return $paginationModel->amount
-     */    
-    public static function PrepareForDb( $query, PaginationModel $paginationModel, $fullSearch = false )
-    {        
+     */
+    public static function PrepareForDb( $query, PaginationModel $paginationModel, $tableName = "", $fullSearch = false )
+    {
+        if( $fullSearch && empty( $tableName ) )
+        {
+            throw new Exception( "Need to define the table name you want to search... if using full search feature!" );
+        }
+        
         $sortBy = array();
 
         if( $fullSearch )
         {            
-            $query->where( function( $cQuery ) use ( $paginationModel, &$sortBy )
+            $query->where( function( $cQuery ) use ( $paginationModel, $tableName, &$sortBy )
             {
                 foreach( $paginationModel->columns as $column )
                 {
-                    $cQuery->orWhere( $column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
+                    $cQuery->orWhere( $tableName.".".$column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
                     $sortBy[ $column->columnName ] = $column->sort;
                 }
             } );
