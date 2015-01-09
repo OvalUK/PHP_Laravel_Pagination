@@ -30,25 +30,31 @@ class PaginationHelper
     public static function PrepareForDb( $query, PaginationModel $paginationModel, $fullSearch = false )
     {        
         $sortBy = array();
-
+        
         if( $fullSearch )
         {            
             $query->where( function( $cQuery ) use ( $paginationModel, &$sortBy )
             {
-                foreach( $paginationModel->columns as $column )
+                foreach( $paginationModel->columns as $key => $column )
                 {
                     if( isset( $column->concat ) )
                     {
                         $columnString = implode(",",$column->concat->columns);
                         $concat = "CONCAT_WS( " . $column->concat->seperator . ", " . $columnString .  " )";
-                        
+                                               
                         //If a column needs to be concatoncated
-                       $cQuery->orWhere( DB::raw($concat), "LIKE", "%$column->searchTerm%");
-                       $sortBy[ $column->columnName ] = $concat;                    
+                        $cQuery->orWhere( DB::raw($concat), "LIKE", "%$column->searchTerm%");
+                        $sortBy[ $concat ] = $column->sort;                   
                     }
                     else
-                    {
-                        $cQuery->orWhere( $column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
+                    {                        
+                        if( $column->preValueAsserted !== FALSE )
+                        {
+                            $cQuery->orWhere( $column->columnName, 'LIKE', "%". $column->searchTerm."%");
+                        }else
+                        {
+                            $cQuery->orWhere( $column->columnName, 'LIKE', "%".$paginationModel->searchTerm."%");
+                        }
                         $sortBy[ $column->columnName ] = $column->sort;
                     }
                 }
@@ -68,19 +74,19 @@ class PaginationHelper
             }
         }
         
+        
         foreach( $sortBy as $key => $value )
         {
             switch( $value )
             {
                 case "asc":
-                    $query->orderBy( $key, "asc" );
+                    $query->orderBy( DB::raw($key), "asc" );
                     break;
                 case "desc":
-                    $query->orderBy( $key, "desc" );
+                    $query->orderBy( DB::raw($key), "desc" );
                     break;
             }
         }     
-
         return $paginationModel->amount;
     }
     
