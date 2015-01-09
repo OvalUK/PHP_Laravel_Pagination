@@ -1,6 +1,7 @@
 <?php
     class PaginationModel
     {    
+        public $paginationName;
         public $page;
         public $amount;
         public $columns = array();
