@@ -43,11 +43,11 @@ class PaginationHelper
                         $concat = "CONCAT_WS( " . $column->concat->seperator . ", " . $columnString .  " )";
                                                
                         //If a column needs to be concatoncated
-                        $cQuery->orWhere( DB::raw($concat), "LIKE", "%$column->searchTerm%");
+                        $cQuery->orWhere( DB::raw($concat), "LIKE", "%$paginationModel->searchTerm%");
                         $sortBy[ $concat ] = $column->sort;                   
                     }
                     else
-                    {                        
+                    {            
                         if( $column->preValueAsserted !== FALSE )
                         {
                             $cQuery->orWhere( $column->columnName, 'LIKE', "%". $column->searchTerm."%");
