@@ -3,5 +3,6 @@
     {
         public $items = NULL;
         public $paginationModel = NULL;
+        public $SearchTermName = "SearchTerm";
     }
 ?>
